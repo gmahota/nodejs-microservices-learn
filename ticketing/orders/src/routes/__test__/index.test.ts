@@ -41,6 +41,19 @@ const buildTicket = async () => {
   return ticket;
 };
 
+it('fetches orders for an particular user', async () => {
+    // Create three tickets
+    const ticketOne = await buildTicket();
+
+    const userOne = user;
+
+      await request(app)
+    .post('/api/orders')
+    .set('Cookie', userOne)
+    .send({ ticketId: ticketOne.id })
+    .expect(201);
+})
+
 // it('fetches orders for an particular user', async () => {
 //   // Create three tickets
 //   const ticketOne = await buildTicket();
