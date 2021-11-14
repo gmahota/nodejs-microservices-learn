@@ -2,6 +2,22 @@ import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
 
+let  cookie : any;
+beforeEach((async () => {
+  const email = 'test@test.com';
+  const password = 'password';
+
+  const response = await request(app)
+    .post('/api/users/signup')
+    .send({
+      email,
+      password
+    })
+    .expect(201);
+
+  cookie = response.get('Set-Cookie');
+}))
+
 it('returns a 404 if the ticket is not found', async () => {
   const id = new mongoose.Types.ObjectId().toHexString();
 
@@ -14,7 +30,7 @@ it('returns the ticket if the ticket is found', async () => {
 
   const response = await request(app)
     .post('/api/tickets')
-    .set('Cookie', global.signin())
+    .set('Cookie', cookie)
     .send({
       title,
       price,
