@@ -6,8 +6,8 @@ import { natsWrapper } from '../../nats-wrapper';
 
 let  cookie : any;
 beforeEach((async () => {
-  const email = 'test@test.com';
-  const password = 'password';
+  const email = 'test@test1.com';
+  const password = 'password1';
 
   const response = await request(app)
     .post('/api/users/signup')
