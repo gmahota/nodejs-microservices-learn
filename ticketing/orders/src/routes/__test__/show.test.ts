@@ -29,22 +29,22 @@ beforeEach(() => {
   user = `express:sess=${base64}`;
 })
 
-// it('fetches the order', async () => {
-//   // Create a ticket
-//   const ticket = Ticket.build({
-//     id: mongoose.Types.ObjectId().toHexString(),
-//     title: 'concert',
-//     price: 20,
-//   });
-//   await ticket.save();
+ it('fetches the order', async () => {
+   // Create a ticket
+   const ticket = Ticket.build({
+     id: mongoose.Types.ObjectId().toHexString(),
+     title: 'concert',
+     price: 20,
+   });
+    await ticket.save();
 
   
-//   // make a request to build an order with this ticket
-//   const { body: order } = await request(app)
-//     .post('/api/orders')
-//     .set('Cookie', user)
-//     .send({ ticketId: ticket.id })
-//     .expect(201);
+   // make a request to build an order with this ticket
+   const { body: order } = await request(app)
+     .post('/api/orders')
+     .set('Cookie', user)
+     .send({ ticketId: ticket.id })
+     .expect(201);
 
 //   // make request to fetch the order
 //   const { body: fetchedOrder } = await request(app)
@@ -79,4 +79,4 @@ beforeEach(() => {
 //     .set('Cookie', user)
 //     .send()
 //     .expect(401);
-// });
+});
