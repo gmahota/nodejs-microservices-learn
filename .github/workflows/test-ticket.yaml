@@ -1,7 +1,9 @@
-name: test-payment
+name: test-ticket
 
 on: 
-  pull_request
+  pull_request:
+    paths:
+      - 'ticketing/tickets/**'
   
 jobs:
   build:

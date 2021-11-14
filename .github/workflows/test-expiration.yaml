@@ -1,7 +1,9 @@
 name: test-expiration
 
 on: 
-  pull_request
+  pull_request:
+    paths:
+      - 'ticketing/expiration/**'
   
 jobs:
   build:
