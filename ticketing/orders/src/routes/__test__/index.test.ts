@@ -3,6 +3,32 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Order } from '../../models/order';
 import { Ticket } from '../../models/ticket';
+import jwt from 'jsonwebtoken';
+
+let user:any 
+
+beforeEach(() => {
+  // Build a JWT payload.  { id, email }
+  const payload = {
+    id: new mongoose.Types.ObjectId().toHexString(),
+    email: 'test@test.com',
+  };
+
+  // Create the JWT!
+  const token = jwt.sign(payload, process.env.JWT_KEY!);
+
+  // Build session Object. { jwt: MY_JWT }
+  const session = { jwt: token };
+
+  // Turn that session into JSON
+  const sessionJSON = JSON.stringify(session);
+
+  // Take JSON and encode it as base64
+  const base64 = Buffer.from(sessionJSON).toString('base64');
+
+  // return a string thats the cookie with the encoded data
+  user = `express:sess=${base64}`;
+})
 
 const buildTicket = async () => {
   const ticket = Ticket.build({
@@ -21,8 +47,8 @@ it('fetches orders for an particular user', async () => {
   const ticketTwo = await buildTicket();
   const ticketThree = await buildTicket();
 
-  const userOne = global.signin();
-  const userTwo = global.signin();
+  const userOne = user;
+  const userTwo = user;
   // Create one order as User #1
   await request(app)
     .post('/api/orders')
