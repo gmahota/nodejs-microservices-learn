@@ -1,34 +1,35 @@
 apiVersion: apps/v1
-kind : Deployment
-metadata :
-  name : auth-depl
+kind: Deployment
+metadata:
+  name: auth-depl
 spec:
   replicas: 1
-  selector :
+  selector:
     matchLabels:
       app: auth
-  template :
-    metadata :
-      labels :
+  template:
+    metadata:
+      labels:
         app: auth
     spec:
-      containers :
-        - name : auth
-          image : mahotag/auth
-          env: 
+      containers:
+        - name: auth
+          image: mahotag/auth
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY
               valueFrom:
-                secretKeyRef: 
+                secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-
 ---
 apiVersion: v1
 kind: Service
-metadata: 
-  name : auth-srv
+metadata:
+  name: auth-srv
 spec:
-  selector :
+  selector:
     app: auth
   ports:
     - name: auth
