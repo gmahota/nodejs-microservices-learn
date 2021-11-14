@@ -4,11 +4,27 @@ import mongoose from 'mongoose';
 import { Ticket } from '../../models/ticket';
 import { natsWrapper } from '../../nats-wrapper';
 
+let  cookie : any;
+beforeEach((async () => {
+  const email = 'test@test.com';
+  const password = 'password';
+
+  const response = await request(app)
+    .post('/api/users/signup')
+    .send({
+      email,
+      password
+    })
+    .expect(201);
+
+  cookie = response.get('Set-Cookie');
+}))
+
 it('returns a 404 if the provided id does not exist', async () => {
   const id = new mongoose.Types.ObjectId().toHexString();
   await request(app)
     .put(`/api/tickets/${id}`)
-    .set('Cookie', global.signin())
+    .set('Cookie', cookie)
     .send({
       title: 'aslkdfj',
       price: 20,
@@ -30,7 +46,7 @@ it('returns a 401 if the user is not authenticated', async () => {
 it('returns a 401 if the user does not own the ticket', async () => {
   const response = await request(app)
     .post('/api/tickets')
-    .set('Cookie', global.signin())
+    .set('Cookie', cookie)
     .send({
       title: 'asldkfj',
       price: 20,
@@ -38,7 +54,7 @@ it('returns a 401 if the user does not own the ticket', async () => {
 
   await request(app)
     .put(`/api/tickets/${response.body.id}`)
-    .set('Cookie', global.signin())
+    .set('Cookie', cookie)
     .send({
       title: 'alskdjflskjdf',
       price: 1000,
@@ -47,8 +63,6 @@ it('returns a 401 if the user does not own the ticket', async () => {
 });
 
 it('returns a 400 if the user provides an invalid title or price', async () => {
-  const cookie = global.signin();
-
   const response = await request(app)
     .post('/api/tickets')
     .set('Cookie', cookie)
@@ -77,8 +91,7 @@ it('returns a 400 if the user provides an invalid title or price', async () => {
 });
 
 it('updates the ticket provided valid inputs', async () => {
-  const cookie = global.signin();
-
+  
   const response = await request(app)
     .post('/api/tickets')
     .set('Cookie', cookie)
@@ -105,8 +118,7 @@ it('updates the ticket provided valid inputs', async () => {
 });
 
 it('publishes an event', async () => {
-  const cookie = global.signin();
-
+  
   const response = await request(app)
     .post('/api/tickets')
     .set('Cookie', cookie)
@@ -128,8 +140,7 @@ it('publishes an event', async () => {
 });
 
 it('rejects updates if the ticket is reserved', async () => {
-  const cookie = global.signin();
-
+  
   const response = await request(app)
     .post('/api/tickets')
     .set('Cookie', cookie)
