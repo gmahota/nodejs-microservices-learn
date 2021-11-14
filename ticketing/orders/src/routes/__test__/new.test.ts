@@ -4,6 +4,7 @@ import { app } from '../../app';
 import { Order, OrderStatus } from '../../models/order';
 import { Ticket } from '../../models/ticket';
 import { natsWrapper } from '../../nats-wrapper';
+import jwt from 'jsonwebtoken';
 
 let user:any 
 
