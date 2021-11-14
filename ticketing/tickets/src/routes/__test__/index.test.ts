@@ -1,8 +1,24 @@
 import request from 'supertest';
 import { app } from '../../app';
 
+let  cookie : any;
+beforeEach((async () => {
+  const email = 'test@test.com';
+  const password = 'password';
+
+  const response = await request(app)
+    .post('/api/users/signup')
+    .send({
+      email,
+      password
+    })
+    .expect(201);
+
+  cookie = response.get('Set-Cookie');
+}))
+
 const createTicket = () => {
-  return request(app).post('/api/tickets').set('Cookie', global.signin()).send({
+  return request(app).post('/api/tickets').set('Cookie', cookie).send({
     title: 'asldkf',
     price: 20,
   });
